@@ -114,66 +114,82 @@ def save_current_profile(updated_profile):
 
 current_profile = get_current_profile()
 
-# --- SIDEBAR ---
+# --- SIDEBAR AUTHENTICATION ---
 with st.sidebar:
     st.image("https://img.icons8.com/isometric/100/robot.png", width=60)
     st.title("HANDSHAKE AUTO APPLY")
     st.caption("AI Career Autopilot & Life Milestone Tailorer")
     st.divider()
 
-    # Active Profile Selector
-    st.subheader("👤 Active Candidate")
-    profile_names = {p.get("id"): f"{p['personal'].get('first_name', '')} {p['personal'].get('last_name', '')}" for p in st.session_state["profiles"]}
-    selected_p_id = st.selectbox(
-        "Select Candidate Profile",
-        options=list(profile_names.keys()),
-        format_func=lambda x: profile_names[x],
-        index=list(profile_names.keys()).index(st.session_state["active_profile_id"]) if st.session_state["active_profile_id"] in profile_names else 0
-    )
-    if selected_p_id != st.session_state["active_profile_id"]:
-        st.session_state["active_profile_id"] = selected_p_id
-        st.rerun()
+    if "authenticated_user" not in st.session_state:
+        st.subheader("🔑 Candidate Sign In")
+        auth_email = st.text_input("Candidate Email / Username", value="snaqvi2017@hotmail.com")
+        auth_pass = st.text_input("Password", type="password", value="password123")
+        auth_portal = st.text_input("Handshake School Login URL", value="https://app.joinhandshake.com/login")
 
-    st.divider()
-
-    # Handshake Account Credentials
-    st.subheader("🤝 Handshake Login Credentials")
-    hs_creds = current_profile.get("handshake_credentials", {}) if current_profile else {}
-    
-    hs_email = st.text_input("Handshake Email / Username", value=hs_creds.get("email", ""), placeholder="student@georgetown.edu")
-    hs_password = st.text_input("Handshake Password", value=hs_creds.get("password", ""), type="password", placeholder="••••••••••••")
-    hs_portal = st.text_input("Portal / School Login URL", value=hs_creds.get("portal_url", "https://app.joinhandshake.com/login"))
-
-    col_hs1, col_hs2 = st.columns(2)
-    with col_hs1:
-        if st.button("💾 Save Credentials"):
-            if current_profile:
-                current_profile["handshake_credentials"] = {
-                    "email": hs_email,
-                    "password": hs_password,
-                    "portal_url": hs_portal,
-                    "connected": bool(hs_email)
-                }
-                save_current_profile(current_profile)
-                st.success("Handshake credentials saved!")
+        if st.button("🔑 Sign In to Candidate Portal"):
+            if auth_email:
+                st.session_state["authenticated_user"] = auth_email
+                if current_profile:
+                    current_profile["handshake_credentials"] = {
+                        "email": auth_email,
+                        "password": auth_pass,
+                        "portal_url": auth_portal,
+                        "connected": True
+                    }
+                    save_current_profile(current_profile)
+                st.success(f"Welcome back, {auth_email.split('@')[0].title()}!")
                 st.rerun()
-
-    with col_hs2:
-        if st.button("🔌 Verify Login"):
-            with st.spinner("Connecting to Handshake..."):
-                success, msg = verify_handshake_login(hs_email, hs_password, hs_portal)
-                if success:
-                    st.success("✅ Handshake Verified!")
-                else:
-                    st.warning(f"Handshake Status: {msg}")
-
-    # Connection Status Badge
-    if hs_creds.get("connected"):
-        st.success("🟢 Handshake Session Connected")
-    elif hs_creds.get("email"):
-        st.info("🔵 Credentials Saved (Unverified)")
+            else:
+                st.error("Please enter a valid email address.")
     else:
-        st.warning("🟡 Credentials Not Configured")
+        st.subheader("👤 Active Candidate Session")
+        st.info(f"Logged in as **{st.session_state['authenticated_user']}**")
+        
+        if st.button("🚪 Sign Out"):
+            del st.session_state["authenticated_user"]
+            st.rerun()
+
+        st.divider()
+
+        # Handshake Account Credentials
+        st.subheader("🤝 Handshake Login Credentials")
+        hs_creds = current_profile.get("handshake_credentials", {}) if current_profile else {}
+        
+        hs_email = st.text_input("Handshake Email / Username", value=hs_creds.get("email", st.session_state['authenticated_user']), placeholder="student@georgetown.edu")
+        hs_password = st.text_input("Handshake Password", value=hs_creds.get("password", ""), type="password", placeholder="••••••••••••")
+        hs_portal = st.text_input("Portal / School Login URL", value=hs_creds.get("portal_url", "https://app.joinhandshake.com/login"))
+
+        col_hs1, col_hs2 = st.columns(2)
+        with col_hs1:
+            if st.button("💾 Save Key"):
+                if current_profile:
+                    current_profile["handshake_credentials"] = {
+                        "email": hs_email,
+                        "password": hs_password,
+                        "portal_url": hs_portal,
+                        "connected": bool(hs_email)
+                    }
+                    save_current_profile(current_profile)
+                    st.success("Handshake credentials saved!")
+                    st.rerun()
+
+        with col_hs2:
+            if st.button("🔌 Verify"):
+                with st.spinner("Connecting to Handshake..."):
+                    success, msg = verify_handshake_login(hs_email, hs_password, hs_portal)
+                    if success:
+                        st.success("✅ Handshake Verified!")
+                    else:
+                        st.warning(f"Status: {msg}")
+
+        # Connection Status Badge
+        if hs_creds.get("connected"):
+            st.success("🟢 Handshake Session Connected")
+        elif hs_creds.get("email"):
+            st.info("🔵 Credentials Saved")
+        else:
+            st.warning("🟡 Credentials Not Configured")
 
     st.divider()
 

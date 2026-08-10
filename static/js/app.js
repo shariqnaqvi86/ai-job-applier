@@ -28,7 +28,46 @@ function switchTab(tabId) {
     if (targetPane) targetPane.classList.add('active');
 }
 
-// --- PROFILES & CANDIDATE DATA ---
+// --- AUTHENTICATION & LOGIN ---
+async function loginCandidate() {
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+    const portal_url = document.getElementById('auth-portal').value;
+
+    if (!email) {
+        alert('Please enter your email address.');
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, portal_url })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            currentProfile = data.profile;
+            document.getElementById('auth-screen').classList.remove('active');
+            renderProfileState();
+        } else {
+            alert(data.message || 'Login failed.');
+        }
+    } catch (err) {
+        console.error('Error logging in:', err);
+    }
+}
+
+async function logoutCandidate() {
+    try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        currentProfile = null;
+        document.getElementById('auth-screen').classList.add('active');
+    } catch (err) {
+        console.error('Error logging out:', err);
+    }
+}
+
 async function loadProfiles() {
     try {
         const res = await fetch('/api/profiles');
@@ -36,19 +75,13 @@ async function loadProfiles() {
         currentProfilesList = data.profiles || [];
         const activeId = data.active_profile_id;
 
-        const dropdown = document.getElementById('profile-select-dropdown');
-        dropdown.innerHTML = '';
-
-        currentProfilesList.forEach(p => {
-            const opt = document.createElement('option');
-            opt.value = p.id;
-            opt.textContent = `${p.personal.first_name} ${p.personal.last_name} (${p.experience.current_role || 'Candidate'})`;
-            if (p.id === activeId) opt.selected = true;
-            dropdown.appendChild(opt);
-        });
-
-        currentProfile = currentProfilesList.find(p => p.id === activeId) || currentProfilesList[0];
-        renderProfileState();
+        if (activeId && currentProfilesList.length > 0) {
+            currentProfile = currentProfilesList.find(p => p.id === activeId) || currentProfilesList[0];
+            document.getElementById('auth-screen').classList.remove('active');
+            renderProfileState();
+        } else {
+            document.getElementById('auth-screen').classList.add('active');
+        }
     } catch (err) {
         console.error('Error loading profiles:', err);
     }

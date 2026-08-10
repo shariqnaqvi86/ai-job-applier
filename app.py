@@ -44,6 +44,85 @@ def get_profiles():
         "active_profile_id": active_profile.get("id") if active_profile else None
     })
 
+# --- AUTHENTICATION & CANDIDATE LOGIN ---
+
+@app.route('/api/auth/login', methods=['POST'])
+def auth_login():
+    global ACTIVE_PROFILE_ID
+    data = request.json or {}
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "").strip()
+    portal_url = data.get("portal_url", "https://app.joinhandshake.com/login").strip()
+
+    if not email:
+        return jsonify({"status": "error", "message": "Email address is required"}), 400
+
+    profiles = load_all_profiles()
+    matching_profile = None
+    for p in profiles:
+        p_email = p.get("personal", {}).get("email", "").strip().lower()
+        hs_email = p.get("handshake_credentials", {}).get("email", "").strip().lower()
+        if email == p_email or email == hs_email:
+            matching_profile = p
+            break
+
+    if not matching_profile:
+        # Create fresh profile for new signing candidate
+        new_id = f"profile_{uuid.uuid4().hex[:6]}"
+        user_part = email.split("@")[0].title()
+        matching_profile = {
+            "id": new_id,
+            "profile_name": user_part,
+            "personal": {
+                "first_name": user_part,
+                "last_name": "",
+                "email": email,
+                "phone": "",
+                "city": "Baltimore",
+                "state": "MD"
+            },
+            "preferences": {
+                "salary": "$85,000"
+            },
+            "handshake_credentials": {
+                "email": email,
+                "password": password,
+                "portal_url": portal_url,
+                "connected": True
+            },
+            "skills": ["Python", "Project Management", "Data Analysis"],
+            "life_milestones": []
+        }
+        profiles.append(matching_profile)
+        save_all_profiles(profiles)
+
+    # Save credentials into existing profile if updated
+    if password or portal_url:
+        matching_profile["handshake_credentials"] = {
+            "email": email,
+            "password": password or matching_profile.get("handshake_credentials", {}).get("password", ""),
+            "portal_url": portal_url or matching_profile.get("handshake_credentials", {}).get("portal_url", "https://app.joinhandshake.com/login"),
+            "connected": True
+        }
+        for idx, p in enumerate(profiles):
+            if p.get("id") == matching_profile["id"]:
+                profiles[idx] = matching_profile
+                break
+        save_all_profiles(profiles)
+
+    ACTIVE_PROFILE_ID = matching_profile["id"]
+    return jsonify({
+        "status": "success",
+        "message": f"Welcome back, {matching_profile['personal'].get('first_name')}!",
+        "profile": matching_profile
+    })
+
+@app.route('/api/auth/logout', methods=['POST'])
+def auth_logout():
+    global ACTIVE_PROFILE_ID
+    ACTIVE_PROFILE_ID = None
+    return jsonify({"status": "success", "message": "Logged out successfully"})
+
 @app.route('/api/profiles/active', methods=['POST'])
 def set_active_profile():
     global ACTIVE_PROFILE_ID
