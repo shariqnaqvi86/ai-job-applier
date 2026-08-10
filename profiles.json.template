@@ -1,0 +1,59 @@
+[
+  {
+    "profile_name": "TEMPLATE — Replace with your info",
+    "personal": {
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "email": "jane.doe@example.com",
+      "phone": "555-0199",
+      "address": "Baltimore, MD",
+      "city": "Baltimore",
+      "state": "MD",
+      "zip": "21201",
+      "country": "United States",
+      "linkedin": "https://www.linkedin.com/in/janedoe",
+      "github": "",
+      "portfolio": ""
+    },
+    "work_authorization": {
+      "us_citizen": true,
+      "authorized_to_work": true,
+      "sponsorship_needed": false,
+      "citizenship_answer": "US Citizen"
+    },
+    "security_clearance": {
+      "has_clearance": false,
+      "level": "None",
+      "active": false,
+      "polygraph": false
+    },
+    "military": {
+      "veteran": false,
+      "branch": "",
+      "years_served": "",
+      "rank": ""
+    },
+    "education": [
+      {
+        "degree": "Master of Science",
+        "field": "Computer Science",
+        "school": "University Example",
+        "year": "2024"
+      }
+    ],
+    "jobs": [
+      {
+        "title": "Software Engineer",
+        "company": "Tech Corp",
+        "dates": "2021-Present",
+        "bullets": [
+          "Developed web applications using Python and React.",
+          "Optimized API endpoints for peak performance."
+        ]
+      }
+    ],
+    "skills": [
+      "Python", "JavaScript", "SQL", "Git", "API Development"
+    ]
+  }
+]

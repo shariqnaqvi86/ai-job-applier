@@ -5,3 +5,8 @@ tailored_docs/*.pdf
 uploads/*
 !uploads/.gitkeep
 handshake_session.json
+applications_log.json
+applications_log.txt
+profiles.json
+profile.json
+*.log

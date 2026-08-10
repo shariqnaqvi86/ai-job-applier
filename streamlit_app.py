@@ -14,7 +14,8 @@ from bot_engine import (
     load_all_profiles, save_all_profiles, get_active_profile,
     generate_tailored_cover_letter, generate_tailored_resume,
     create_pdf, parse_uploaded_resume, search_jobs,
-    verify_handshake_login, global_bot, TAILORED_DOCS_DIR, UPLOADS_DIR
+    verify_handshake_login, open_handshake_browser, global_bot,
+    TAILORED_DOCS_DIR, UPLOADS_DIR
 )
 
 # --- PAGE CONFIGURATION ---
@@ -141,128 +142,63 @@ with st.sidebar:
     if hs_creds.get("connected"):
         st.success("🟢 Handshake Session Verified")
         st.write(f"**Logged in as:** `{hs_creds.get('email')}`")
-    elif hs_creds.get("email"):
-        st.info("🔵 Handshake Credentials Saved")
-        st.write(f"**Account:** `{hs_creds.get('email')}`")
     else:
-        st.warning("🟡 Handshake Not Logged In")
+        st.warning("🟡 Handshake Session Idle")
 
     st.divider()
     st.subheader("🔑 Gemini AI Engine")
-    gemini_key = st.text_input("Gemini API Key", value=os.environ.get("GEMINI_API_KEY", ""), type="password")
+    gemini_key = st.text_input("Gemini API Key", value=os.environ.get("GEMINI_API_KEY", ""), type="password", key="sidebar_gemini_key")
     if gemini_key:
         os.environ["GEMINI_API_KEY"] = gemini_key
 
 # --- HEADER & WIZARD STEPS ---
-st.title("🤝 Handshake Auto-Apply Autopilot")
-st.caption("Search live Handshake positions and apply job-by-job automatically with tailored ATS resumes & humanized cover letters.")
+st.title("🤝 Universal Handshake Autopilot Bot")
+st.caption("Universal job application engine: upload your master resume & life markers, search Handshake manually in the browser, then click Start Auto Apply.")
 
 # Step Progress Bar
 st.markdown("""
 <div class="step-banner">
     <div class="step-box">
         <div class="step-num">Step 1</div>
-        <div class="step-title">🤝 Sign in to Handshake</div>
+        <div class="step-title">📄 Master Resume & Life Markers</div>
     </div>
     <div class="step-box">
         <div class="step-num">Step 2</div>
-        <div class="step-title">📄 Resume & Life Markers</div>
+        <div class="step-title">🌐 Open Browser & Search Jobs</div>
     </div>
     <div class="step-box">
         <div class="step-num">Step 3</div>
-        <div class="step-title">🔍 Search Handshake Jobs</div>
-    </div>
-    <div class="step-box">
-        <div class="step-num">Step 4</div>
-        <div class="step-title">🚀 Launch Job-by-Job Apply</div>
+        <div class="step-title">🚀 Auto Apply Start / Stop</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # Main Navigation Tabs
-tab_hs_login, tab_materials, tab_search_apply, tab_autopilot = st.tabs([
-    "1️⃣ Handshake Sign In",
-    "2️⃣ Resume & Life Markers",
-    "3️⃣ Handshake Job Search",
-    "4️⃣ 🚀 Autopilot Campaign"
+tab_materials, tab_browser_search, tab_autopilot = st.tabs([
+    "1️⃣ Master Resume & Life Markers",
+    "2️⃣ 🌐 Handshake Browser & Search",
+    "3️⃣ 🚀 Auto Apply Engine (Start / Stop)"
 ])
 
 # ==============================================================================
-# STEP 1: HANDSHAKE SIGN IN
-# ==============================================================================
-with tab_hs_login:
-    st.header("Step 1: Sign In to Your Handshake Account")
-    st.caption("Enter your university or personal Handshake credentials to establish your automated job application session.")
-
-    col_l1, col_l2 = st.columns([2, 1])
-
-    with col_l1:
-        with st.form("handshake_login_form"):
-            st.subheader("🔑 Handshake Credentials")
-            hs_email_input = st.text_input(
-                "Handshake Email Address / Screen Name",
-                value=hs_creds.get("email", "snaqvi2017@hotmail.com"),
-                placeholder="student@georgetown.edu or username"
-            )
-            hs_pass_input = st.text_input(
-                "Handshake Password",
-                value=hs_creds.get("password", ""),
-                type="password",
-                placeholder="••••••••••••"
-            )
-            hs_portal_input = st.text_input(
-                "Handshake Portal / School Login URL",
-                value=hs_creds.get("portal_url", "https://app.joinhandshake.com/login")
-            )
-
-            submit_login = st.form_submit_button("🔑 Sign In to Handshake Portal")
-
-            if submit_login:
-                with st.spinner("Connecting to Handshake portal via stealth driver..."):
-                    success, msg = verify_handshake_login(hs_email_input, hs_pass_input, hs_portal_input)
-                    current_profile["handshake_credentials"] = {
-                        "email": hs_email_input,
-                        "password": hs_pass_input,
-                        "portal_url": hs_portal_input,
-                        "connected": success
-                    }
-                    current_profile["personal"]["email"] = hs_email_input
-                    save_profile(current_profile)
-
-                    if success:
-                        st.success("✅ Connected to Handshake successfully!")
-                    else:
-                        st.warning(f"Handshake Session Status: {msg}")
-                    st.rerun()
-
-    with col_l2:
-        st.subheader("💡 Session Security")
-        st.info("""
-        **How Handshake Sign In Works:**
-        - Your Handshake session opens in a secure stealth browser.
-        - Cookies & authentication stay saved on your local system.
-        - Autopilot will apply directly on Handshake on your behalf using your saved profile.
-        """)
-
-# ==============================================================================
-# STEP 2: RESUME & LIFE MARKERS
+# STEP 1: MASTER RESUME & LIFE MARKERS (UNIVERSAL / MULTI-USER)
 # ==============================================================================
 with tab_materials:
-    st.header("Step 2: Upload Base Resume & Set Life Markers")
-    st.caption("Upload your base resume and select significant life markers (e.g. Navy Veteran, Master's Degree) that Gemini AI will weave into tailored cover letters.")
+    st.header("Step 1: Upload Master Resume & Set Life Markers")
+    st.caption("Anyone can use this app! Upload your master resume and add significant life markers (milestones) for AI cover letters.")
 
     col_m1, col_m2 = st.columns(2)
 
     with col_m1:
-        st.subheader("📄 Upload Base Resume")
-        uploaded_file = st.file_uploader("Upload PDF / DOCX / TXT Resume", type=["pdf", "docx", "doc", "txt"])
+        st.subheader("📄 Upload Master Resume")
+        uploaded_file = st.file_uploader("Upload PDF / DOCX / TXT Resume", type=["pdf", "docx", "doc", "txt"], key="resume_file_uploader")
         if uploaded_file is not None:
             filename = uploaded_file.name
             filepath = os.path.join(UPLOADS_DIR, f"{uuid.uuid4().hex[:6]}_{filename}")
             with open(filepath, "wb") as f:
                 f.write(uploaded_file.getbuffer())
 
-            with st.spinner("Extracting skills & experience..."):
+            with st.spinner("Extracting skills & experience from master resume..."):
                 parsed_info, raw_text = parse_uploaded_resume(filepath)
                 if parsed_info.get("skills"):
                     existing = set(current_profile.get("skills", []))
@@ -279,34 +215,37 @@ with tab_materials:
     with col_m2:
         st.subheader("👤 Candidate Contact Info")
         p_personal = current_profile.get("personal", {})
-        c_fn = st.text_input("First Name", value=p_personal.get("first_name", "Shariq"))
-        c_ln = st.text_input("Last Name", value=p_personal.get("last_name", "Naqvi"))
-        c_phone = st.text_input("Phone Number", value=p_personal.get("phone", "615-957-5321"))
-        c_loc = st.text_input("Location", value=f"{p_personal.get('city', 'Baltimore')}, {p_personal.get('state', 'MD')}")
+        c_fn = st.text_input("First Name", value=p_personal.get("first_name", ""), placeholder="e.g. Kelly", key="contact_first_name")
+        c_ln = st.text_input("Last Name", value=p_personal.get("last_name", ""), placeholder="e.g. DeToy", key="contact_last_name")
+        c_phone = st.text_input("Phone Number", value=p_personal.get("phone", ""), placeholder="615-555-0199", key="contact_phone_number")
+        c_email = st.text_input("Email Address", value=p_personal.get("email", ""), placeholder="user@georgetown.edu", key="contact_email_str")
+        c_loc = st.text_input("Location", value=f"{p_personal.get('city', '')}, {p_personal.get('state', '')}".strip(", "), placeholder="Baltimore, MD", key="contact_location_str")
 
-        if st.button("Save Contact Details"):
+        if st.button("💾 Save Profile Details", key="btn_save_contact"):
             p_personal["first_name"] = c_fn
             p_personal["last_name"] = c_ln
             p_personal["phone"] = c_phone
+            p_personal["email"] = c_email
             loc_p = c_loc.split(",")
             p_personal["city"] = loc_p[0].strip() if loc_p else ""
             p_personal["state"] = loc_p[1].strip() if len(loc_p) > 1 else ""
             current_profile["personal"] = p_personal
             save_profile(current_profile)
-            st.success("Contact details updated!")
+            st.success("Candidate details updated!")
 
     st.divider()
 
     # LIFE MARKERS / MILESTONES
     st.subheader("💎 Significant Life Markers (Woven into Cover Letters)")
+    st.caption("Add custom life milestones (e.g. Military Veteran, Georgetown MS, Career Pivot, Leadership Feat) for Gemini AI to weave into cover letters.")
     
     with st.expander("➕ Add New Life Marker", expanded=False):
-        mk_title = st.text_input("Marker Title", placeholder="e.g. US Navy Squad Leader / Georgetown Policy Pivot")
-        mk_cat = st.selectbox("Category", ["Leadership & Military", "Academic Pivot", "Overcoming Challenge", "Public Health Feat"])
-        mk_desc = st.text_area("Narrative Context", placeholder="Describe your experience, challenges faced, and achievements...")
-        mk_takeaway = st.text_input("Key Takeaway for Employer", placeholder="e.g. High-stakes leadership, resilience under pressure")
+        mk_title = st.text_input("Marker Title", placeholder="e.g. US Navy Squad Leader / Georgetown Policy Pivot", key="marker_title_input")
+        mk_cat = st.selectbox("Category", ["Leadership & Military", "Academic Pivot", "Overcoming Challenge", "Public Health & Policy", "Technical Achievement"], key="marker_category_select")
+        mk_desc = st.text_area("Narrative Context", placeholder="Describe experience, challenges faced, and achievements...", key="marker_desc_input")
+        mk_takeaway = st.text_input("Key Takeaway for Employer", placeholder="e.g. High-stakes leadership, resilience under pressure", key="marker_takeaway_input")
 
-        if st.button("Add Milestone Marker"):
+        if st.button("➕ Add Milestone Marker", key="btn_add_milestone"):
             if mk_title and mk_desc:
                 new_mk = {
                     "id": f"m_{uuid.uuid4().hex[:8]}",
@@ -344,95 +283,135 @@ with tab_materials:
                     st.rerun()
 
 # ==============================================================================
-# STEP 3: SEARCH HANDSHAKE JOBS
+# STEP 2: LAUNCH HANDSHAKE BROWSER & MANUAL SEARCH
 # ==============================================================================
-with tab_search_apply:
-    st.header("Step 3: Search Handshake Jobs")
-    st.caption("Search live job listings targeting Handshake-only easy apply positions.")
+with tab_browser_search:
+    st.header("Step 2: Open Handshake Browser & Perform Manual Search")
+    st.caption("Click below to open a live Chromium window. Log in manually (Georgetown SSO / Duo 2FA) and perform your keyword search.")
 
-    col_kw, col_lc, col_btn = st.columns([3, 2, 1.5])
-    search_keywords = col_kw.text_input("Target Job Title / Keywords", value="Python Developer", placeholder="e.g. Data Analyst, Project Manager")
-    search_location = col_lc.text_input("Location", value="Baltimore, MD")
-    
-    with col_btn:
-        st.write("") # spacing
-        st.write("")
-        execute_search = st.button("🔍 Search Jobs")
+    col_b1, col_b2 = st.columns([2, 1])
 
-    if execute_search or "search_results" not in st.session_state:
-        with st.spinner("Searching Handshake live job listings..."):
+    with col_b1:
+        st.subheader("🌐 Handshake Chromium Session")
+        st.write("Click the button below to launch Chromium. You can log into Handshake manually and perform any job search or filter.")
+        
+        if st.button("🌐 Open Handshake Browser Window", key="btn_open_browser"):
+            with st.spinner("Launching Chromium browser window..."):
+                success, msg = open_handshake_browser()
+                if success:
+                    st.success(f"✅ {msg}")
+                else:
+                    st.error(f"Error launching browser: {msg}")
+
+        st.divider()
+        st.subheader("🔍 Select & Queue Target Positions")
+        col_kw, col_lc, col_btn = st.columns([3, 2, 1.5])
+        search_keywords = col_kw.text_input("Target Job Title / Keywords", value="Python Developer", placeholder="e.g. Data Analyst, Project Manager", key="job_search_keywords")
+        search_location = col_lc.text_input("Location", value="Baltimore, MD", key="job_search_location")
+        
+        with col_btn:
+            st.write("")
+            st.write("")
+            execute_search = st.button("🔍 Filter Jobs", key="btn_execute_search")
+
+        if execute_search or "search_results" not in st.session_state:
             results = search_jobs(search_keywords, search_location, True)
-            # Tag jobs for Handshake applying
             for r in results:
                 r["handshake_direct"] = True
             st.session_state["search_results"] = results
 
-    jobs_found = st.session_state.get("search_results", [])
-    st.subheader(f"Handshake Jobs Found ({len(jobs_found)} positions)")
+        jobs_found = st.session_state.get("search_results", [])
+        st.subheader(f"Handshake Jobs Found ({len(jobs_found)} positions)")
 
-    # Select All / Deselect All
-    selected_jobs = []
-    for idx, job in enumerate(jobs_found):
-        with st.container():
-            col_j1, col_j2 = st.columns([4, 1])
-            with col_j1:
-                is_checked = st.checkbox(
-                    f"**{job.get('title')}** — {job.get('company')}",
-                    value=True,
-                    key=f"job_chk_{job.get('id')}"
-                )
-                if is_checked:
-                    selected_jobs.append(job)
-                st.caption(f"📍 {job.get('location')} | 💰 {job.get('salary')} | <span class='badge-handshake'>Handshake Apply Only</span>", unsafe_allow_html=True)
-                st.write(job.get("description")[:220] + "...")
-            with col_j2:
-                st.metric("ATS Match", f"{job.get('match_score', 92)}%")
-            st.divider()
+        selected_jobs = []
+        for idx, job in enumerate(jobs_found):
+            with st.container():
+                col_j1, col_j2 = st.columns([4, 1])
+                with col_j1:
+                    is_checked = st.checkbox(
+                        f"**{job.get('title')}** — {job.get('company')}",
+                        value=True,
+                        key=f"job_chk_{job.get('id', idx)}"
+                    )
+                    if is_checked:
+                        selected_jobs.append(job)
+                    st.caption(f"📍 {job.get('location')} | 💰 {job.get('salary')} | <span class='badge-handshake'>Handshake Apply</span>", unsafe_allow_html=True)
+                    st.write(job.get("description")[:220] + "...")
+                with col_j2:
+                    st.metric("ATS Match", f"{job.get('match_score', 92)}%")
+                st.divider()
 
-    st.session_state["queued_jobs"] = selected_jobs
+        st.session_state["queued_jobs"] = selected_jobs
+
+    with col_b2:
+        st.subheader("📋 Instructions")
+        st.info("""
+        1. Click **Open Handshake Browser Window**.
+        2. Log into Handshake in the opened window (enter Georgetown NetID & complete Duo 2FA push on phone).
+        3. Navigate to **Jobs**, search/filter positions.
+        4. Select queued positions and proceed to **Step 3** to Start Auto Apply!
+        """)
 
 # ==============================================================================
-# STEP 4: AUTOPILOT CAMPAIGN (JOB-BY-JOB)
+# STEP 3: AUTO APPLY ENGINE (START / STOP CONTROLS)
 # ==============================================================================
 with tab_autopilot:
-    st.header("Step 4: Launch Handshake Autopilot Campaign")
-    st.caption("The bot will automatically iterate job-by-job on Handshake: tailoring resumes, weaving your life markers into cover letters, and submitting applications.")
+    st.header("Step 3: Auto Apply Campaign (Start / Stop Controls)")
+    st.caption("Control the automated applying loop. The bot will generate tailored ATS resumes & cover letters using your uploaded profile and submit applications.")
 
     queued_jobs = st.session_state.get("queued_jobs", [])
     st.info(f"📋 **{len(queued_jobs)} Handshake jobs queued** for automated application.")
 
     col_ctrl1, col_ctrl2, col_ctrl3 = st.columns(3)
-    wpm_speed = col_ctrl1.slider("Human Typing Speed (WPM)", 40, 100, 65)
-    mouse_jitter = col_ctrl2.checkbox("Enable Mouse Jitter & Curves", value=True)
-    delay_min, delay_max = col_ctrl3.slider("Random Delay Between Steps (sec)", 1, 10, (2, 5))
+    wpm_speed = col_ctrl1.slider("Human Typing Speed (WPM)", 40, 100, 65, key="slider_wpm_speed")
+    mouse_jitter = col_ctrl2.checkbox("Enable Mouse Jitter & Curves", value=True, key="chk_mouse_jitter")
+    delay_min, delay_max = col_ctrl3.slider("Random Delay Between Steps (sec)", 1, 10, (2, 5), key="slider_random_delay")
 
-    if st.button("🚀 LAUNCH HANDSHAKE AUTOPILOT (Job-by-Job Apply)"):
+    st.divider()
+    col_start, col_stop, col_pause = st.columns(3)
+
+    with col_start:
+        start_clicked = st.button("🚀 START AUTO APPLY", key="btn_start_auto_apply")
+    with col_stop:
+        stop_clicked = st.button("🛑 STOP AUTO APPLY", key="btn_stop_auto_apply")
+    with col_pause:
+        pause_clicked = st.button("⏸️ PAUSE / RESUME", key="btn_pause_auto_apply")
+
+    if stop_clicked:
+        global_bot.stop()
+        st.warning("🛑 Auto Apply engine stopped by user command.")
+
+    if pause_clicked:
+        is_paused = global_bot.pause()
+        st.info("⏸️ Engine Paused" if is_paused else "▶️ Engine Resumed")
+
+    if start_clicked:
         if not queued_jobs:
-            st.error("No jobs selected. Please go to Step 3 and select jobs.")
+            st.error("No jobs selected. Please go to Step 2 and select jobs.")
         else:
-            st.success("Autopilot Started! Processing jobs on Handshake job-by-job...")
-            progress_bar = st.progress(0)
-            status_box = st.empty()
-            log_container = st.container()
+            job_ids = [j.get("id") for j in queued_jobs if j.get("id")]
+            started, msg = global_bot.start_apply_campaign(
+                job_ids=job_ids,
+                profile=current_profile,
+                humanizer_settings={
+                    "typing_wpm": wpm_speed,
+                    "mouse_jitter": mouse_jitter,
+                    "min_delay": delay_min,
+                    "max_delay": delay_max
+                }
+            )
+            if started:
+                st.success("🚀 Auto Apply Engine Started!")
+            else:
+                st.info(f"Bot Status: {msg}")
 
-            for idx, job in enumerate(queued_jobs):
-                pct = int(((idx + 1) / len(queued_jobs)) * 100)
-                progress_bar.progress(pct)
-
-                status_box.markdown(f"### ⏳ [Job {idx+1}/{len(queued_jobs)}] Applying to **{job.get('title')}** at **{job.get('company')}**...")
-
-                with log_container:
-                    st.write(f"🔹 **Analyzing Requirements**: `{job.get('title')}`")
-                    time.sleep(1)
-                    st.write(f"🔹 **Weaving Life Markers**: Including selected military & policy milestones into cover letter...")
-                    
-                    # Generate tailored docs
-                    cl_text = generate_tailored_cover_letter(job.get('title'), job.get('company'), job.get('description'), current_profile)
-                    time.sleep(1.5)
-                    st.write(f"🔹 **Submitting on Handshake**: Navigating to Handshake posting page & uploading tailored PDF...")
-                    time.sleep(2)
-                    st.success(f"✅ **SUBMITTED SUCCESSFULLY** on Handshake for `{job.get('title')}` at `{job.get('company')}`!")
-                    st.divider()
-
-            st.balloons()
-            st.success("🎉 All queued Handshake applications submitted successfully!")
+    # Live Status & Log Viewer
+    st.subheader("📊 Live Execution Progress & Logs")
+    if global_bot.is_running:
+        st.write(f"**Current Action:** `{global_bot.current_step}`")
+    
+    if global_bot.logs:
+        st.text_area("Live Terminal Output Logs", value="\n".join(global_bot.logs[-25:]), height=300, key="live_log_output_area")
+    else:
+        st.caption("No log activity yet. Click *START AUTO APPLY* to begin processing applications.")
+        st.divider()
