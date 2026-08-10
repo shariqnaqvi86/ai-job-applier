@@ -1,0 +1,660 @@
+[
+  {
+    "profile_name": "Shariq Naqvi",
+    "personal": {
+      "first_name": "Shariq",
+      "last_name": "Naqvi",
+      "email": "snaqvi2017@hotmail.com",
+      "phone": "6159575321",
+      "address": "Baltimore, MD 21224",
+      "city": "Baltimore",
+      "state": "MD",
+      "zip": "21224",
+      "country": "United States",
+      "linkedin": "https://www.linkedin.com/in/shariqnaqvi",
+      "github": "",
+      "portfolio": ""
+    },
+    "work_authorization": {
+      "us_citizen": true,
+      "authorized_to_work": true,
+      "sponsorship_needed": false,
+      "citizenship_answer": "US Citizen"
+    },
+    "security_clearance": {
+      "has_clearance": false,
+      "level": "None",
+      "active": false,
+      "polygraph": false,
+      "able_to_obtain": true,
+      "notes": "Able to obtain clearance (US Citizen, Navy veteran, clean record)"
+    },
+    "military": {
+      "veteran": true,
+      "branch": "US Navy",
+      "years_served": "2012-2016",
+      "rank": "Operations Lead / Squad Leader"
+    },
+    "education": [
+      {
+        "degree": "Master of Science",
+        "field": "Addiction Policy & Practice",
+        "school": "Georgetown University",
+        "city_state": "Washington, DC",
+        "year": "Expected August 2026",
+        "start_month": "January",
+        "start_year": "2023",
+        "end_month": "August",
+        "end_year": "2026",
+        "current": true
+      },
+      {
+        "degree": "Master of Business Administration",
+        "field": "Business Administration",
+        "school": "Southern New Hampshire University",
+        "city_state": "Manchester, NH",
+        "year": "2022",
+        "start_month": "January",
+        "start_year": "2020",
+        "end_month": "May",
+        "end_year": "2022",
+        "current": false
+      },
+      {
+        "degree": "Bachelor of Science",
+        "field": "Computer Science",
+        "school": "Tennessee State University",
+        "city_state": "Nashville, TN",
+        "year": "2011",
+        "start_month": "August",
+        "start_year": "2007",
+        "end_month": "May",
+        "end_year": "2011",
+        "current": false
+      }
+    ],
+    "experience": {
+      "total_years": 7,
+      "current_role": "Technical Manager / SME",
+      "current_company": "CareFirst BlueCross BlueShield",
+      "available_start": "2 weeks notice",
+      "skill_years": {
+        "python": 5,
+        "sql": 6,
+        "c++": 4,
+        "c#": 3,
+        "java": 3,
+        "javascript": 2,
+        ".net": 3,
+        "asp.net": 2,
+        "html": 3,
+        "css": 3,
+        "jquery": 2,
+        "aws": 3,
+        "docker": 3,
+        "kubernetes": 1,
+        "linux": 5,
+        "powershell": 3,
+        "oracle": 5,
+        "ms sql server": 4,
+        "t-sql": 4,
+        "etl": 5,
+        "informatica": 4,
+        "agile": 5,
+        "scrum": 5,
+        "leadership": 5,
+        "management": 5,
+        "programming": 7,
+        "oop": 5,
+        "analysis": 5,
+        "data": 6,
+        "machine_learning": 2,
+        "cybersecurity": 3,
+        "git": 5,
+        "ci/cd": 4,
+        "visual studio": 4,
+        "tfs": 3,
+        "default": 3
+      }
+    },
+    "jobs": [
+      {
+        "title": "Technical Manager / SME",
+        "company": "CareFirst BlueCross BlueShield",
+        "location": "Baltimore, MD",
+        "dates": "2019-Present",
+        "bullets": [
+          "Led enterprise data integration initiatives as SME for ETL and analytics platforms",
+          "Designed system architecture for complex data integrations, defining reusable patterns",
+          "Managed team of 5 engineers, performed code reviews, stakeholder coordination",
+          "Built governed MicroStrategy dashboards for diverse stakeholders",
+          "Automated incident response with shell, SQL, and PL-SQL scripting"
+        ]
+      },
+      {
+        "title": "Software Engineer",
+        "company": "Lockheed Martin",
+        "location": "Orlando, FL",
+        "dates": "2023-2024",
+        "bullets": [
+          "Developed C++ code for F-35 simulator, improved weather simulation by 40% with CUDA GPU",
+          "Integrated gRPC for simulator communication",
+          "Set up Docker containers for modularity and scalability"
+        ]
+      },
+      {
+        "title": "Software Engineer",
+        "company": "Next Phase Solutions & Services",
+        "location": "Columbia, MD",
+        "dates": "2019-2023",
+        "bullets": [
+          "Worked with CMS MDM team on project delivery",
+          "Wrote Linux scripts to automate operations, cutting manual effort by 20%",
+          "Led proof of concept initiatives for new approaches"
+        ]
+      },
+      {
+        "title": "Software Developer",
+        "company": "CareFirst BlueCross BlueShield",
+        "location": "Baltimore, MD",
+        "dates": "2017-2019",
+        "bullets": [
+          "Built ETL pipelines using Informatica for critical business applications",
+          "Validated data accuracy with SQL and Excel"
+        ]
+      },
+      {
+        "title": "Operations Lead / Squad Leader",
+        "company": "U.S. Navy",
+        "location": "Global Deployments",
+        "dates": "2012-2016",
+        "bullets": [
+          "Led mission-critical operations and risk assessments for maritime security",
+          "Trained and managed 20+ personnel for search and rescue operations",
+          "Managed logistics for multi-million-dollar naval assets"
+        ]
+      }
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "C++",
+      "C#",
+      "Java",
+      "JavaScript",
+      "jQuery",
+      "HTML5",
+      "CSS",
+      "ASP.NET",
+      ".NET Framework",
+      "WCF",
+      "MVC",
+      "ADO.NET",
+      "Oracle",
+      "PL/SQL",
+      "T-SQL",
+      "MS SQL Server",
+      "Shell Scripting",
+      "PowerShell",
+      "Bash",
+      "Linux",
+      "ETL",
+      "Informatica",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "Microsoft Visual Studio",
+      "Team Foundation Server",
+      "Git",
+      "CI/CD",
+      "MicroStrategy",
+      "Splunk",
+      "Apache Airflow",
+      "Databricks",
+      "Agile",
+      "Scrum",
+      "OOP",
+      "Design Patterns",
+      "Microservices",
+      "gRPC",
+      "CUDA",
+      "Data Engineering",
+      "Data Analysis",
+      "Project Management",
+      "Team Leadership"
+    ],
+    "preferences": {
+      "salary": 85000,
+      "salary_answer": "industry average",
+      "willing_to_relocate": true,
+      "relocation_area": "within commuting distance of Baltimore",
+      "work_arrangement": "any",
+      "willing_onsite": true,
+      "willing_hybrid": true,
+      "willing_remote": true,
+      "willing_travel": true,
+      "commute_ok": true,
+      "shift_flexible": true,
+      "interview_availability": "Available anytime",
+      "how_heard": "Indeed"
+    },
+    "screening_defaults": {
+      "criminal_history": false,
+      "drug_test_ok": true,
+      "background_check_ok": true,
+      "disability": "Prefer not to answer",
+      "gender": "Male",
+      "race_ethnicity": "Other",
+      "race_ethnicity_fallbacks": [
+        "Other",
+        "Two or More Races",
+        "White",
+        "Prefer not to answer",
+        "Decline to answer"
+      ],
+      "education_level": "Master's Degree",
+      "employee_of_company": false
+    },
+    "resume_text": "Georgetown graduate student with experience in technical management, software engineering, and military operations. 7+ years in data engineering, ETL, and analytics platforms. US Navy veteran (2012-2016). Skills: Python, SQL, C++, Oracle, ETL, Informatica, AWS, Docker, Agile. Currently Technical Manager/SME at CareFirst BCBS. Education: MS Georgetown (current), MBA SNHU, BS CS Tennessee State.",
+    "learned_answers": {},
+    "id": "profile_1350",
+    "life_milestones": [
+      {
+        "id": "m1",
+        "title": "US Navy Operational Leadership",
+        "category": "Leadership & Service",
+        "description": "Led operations crew in high-stakes environments, instilling rigorous attention to detail.",
+        "key_takeaways": "Leadership under fire, reliability, systems thinking.",
+        "selected": true
+      },
+      {
+        "id": "m2",
+        "title": "Georgetown Academic & Policy Focus",
+        "category": "Education Pivot",
+        "description": "Pursuing MS at Georgetown to apply data science to healthcare policy.",
+        "key_takeaways": "Dedication to high-impact work, strategic insight.",
+        "selected": true
+      }
+    ]
+  },
+  {
+    "profile_name": "Kelly DeToy",
+    "personal": {
+      "first_name": "Kelly",
+      "last_name": "DeToy",
+      "email": "kelly.detoy2@gmail.com",
+      "phone": "2032408184",
+      "address": "3520 Bank St, Baltimore, MD 21224",
+      "city": "Baltimore",
+      "state": "MD",
+      "zip": "21224",
+      "country": "United States",
+      "linkedin": "https://www.linkedin.com/in/kelly-detoy-9a91a2128/",
+      "github": "",
+      "portfolio": ""
+    },
+    "work_authorization": {
+      "us_citizen": true,
+      "authorized_to_work": true,
+      "sponsorship_needed": false,
+      "citizenship_answer": "US Citizen"
+    },
+    "security_clearance": {
+      "has_clearance": false,
+      "level": "None",
+      "active": false,
+      "polygraph": false,
+      "able_to_obtain": true,
+      "notes": ""
+    },
+    "military": {
+      "veteran": false,
+      "branch": "",
+      "years_served": "",
+      "rank": ""
+    },
+    "education": [
+      {
+        "degree": "Master of Public Health",
+        "field": "Public Health",
+        "school": "Johns Hopkins Bloomberg School of Public Health",
+        "city_state": "Baltimore, MD",
+        "year": "2018",
+        "start_month": "August",
+        "start_year": "2017",
+        "end_month": "December",
+        "end_year": "2018",
+        "current": false
+      },
+      {
+        "degree": "Doctor of Medicine",
+        "field": "Medicine",
+        "school": "SUNY Stony Brook School of Medicine",
+        "city_state": "Stony Brook, NY",
+        "year": "2013",
+        "start_month": "August",
+        "start_year": "2009",
+        "end_month": "May",
+        "end_year": "2013",
+        "current": false
+      },
+      {
+        "degree": "Bachelor of Arts",
+        "field": "Biology",
+        "school": "Bard College",
+        "city_state": "Annandale-on-Hudson, NY",
+        "year": "2006",
+        "start_month": "August",
+        "start_year": "2002",
+        "end_month": "May",
+        "end_year": "2006",
+        "current": false
+      }
+    ],
+    "experience": {
+      "total_years": 15,
+      "current_role": "Assistant Scientist",
+      "current_company": "Johns Hopkins School of Public Health",
+      "available_start": "2 weeks notice",
+      "skill_years": {
+        "r": 5,
+        "matlab": 4,
+        "data analysis": 15,
+        "database management": 10,
+        "project management": 10,
+        "health research": 15,
+        "grants management": 5,
+        "clinical care": 8,
+        "laboratory techniques": 8,
+        "data visualization": 5,
+        "statistical analysis": 10,
+        "epidemiology": 10,
+        "public health": 10,
+        "irb": 8,
+        "pcr": 8,
+        "elisa": 5,
+        "clinical research": 10,
+        "mentoring": 8,
+        "data collection": 10,
+        "community health": 5,
+        "logistics": 8,
+        "excel": 15,
+        "default": 5
+      }
+    },
+    "jobs": [
+      {
+        "title": "Assistant Scientist",
+        "company": "Johns Hopkins School of Public Health, International Health Department",
+        "location": "Baltimore, MD",
+        "dates": "April 2021-Present",
+        "bullets": [
+          "Lead cardiac monitoring substudy for Chagasic Cardiomyopathy cohort in Bolivia",
+          "Developed database architecture integrating R, MATLAB, and Kubios for heart rate variability analyses",
+          "Transformed paper/excel data collection systems to secure digital platform across Bolivia, Peru and US",
+          "Managed QA and data cleaning for cardiomyopathy cohort of 4000+ recruits with yearly follow-ups",
+          "Directed cleaning and analysis of laboratory and recruitment data for HIV co-infection study",
+          "Implement NIH-compliant data sharing plans and execute grant applications for NIH R21, D43, R01",
+          "Mentor postdoctoral fellows in data analysis and project planning",
+          "Facilitate collaboration between co-investigators across US and Peru sites",
+          "Process IRB approvals and annual reports"
+        ]
+      },
+      {
+        "title": "Physician (Locum Tenens)",
+        "company": "Locum Tenens",
+        "location": "Pennsylvania & New York",
+        "dates": "April 2019-March 2021",
+        "bullets": [
+          "Delivered comprehensive medical treatment to diverse patient populations in outpatient and inpatient settings",
+          "Provided frontline care during the COVID-19 crisis in Westchester County's dedicated unit",
+          "Managed critical cases in high-pressure environments ensuring optimal patient outcomes"
+        ]
+      },
+      {
+        "title": "Research Assistant",
+        "company": "Johns Hopkins School of Public Health, International Health Department",
+        "location": "Baltimore, MD",
+        "dates": "August 2017-May 2018",
+        "bullets": [
+          "Secured institutional grant and R21 NIH grant through proposal development",
+          "Executed experiments utilizing ELISA, TESA, and PCR-based assays for Chagas disease detection",
+          "Designed clinical research database and managed data collection",
+          "Mentored 3 volunteers and provided training to new laboratory personnel",
+          "Generated laboratory and safety SOPs with technical documentation"
+        ]
+      },
+      {
+        "title": "Resident Physician",
+        "company": "Stony Brook University Hospital",
+        "location": "Stony Brook, NY",
+        "dates": "July 2013-June 2016",
+        "bullets": [
+          "Mentored and guided a team of 15 interns and PGY2 residents",
+          "Delivered comprehensive patient care across Trauma, ICU, Burn Unit, Oncology, and general wards",
+          "Conducted presentations and facilitated lectures including case discussions at weekly morbidity and mortality sessions"
+        ]
+      },
+      {
+        "title": "Laboratory Technician",
+        "company": "Columbia University Center for Infection and Immunity",
+        "location": "New York, NY",
+        "dates": "January 2007-December 2009",
+        "bullets": [
+          "Designed and evaluated novel assays for detecting viral hemorrhagic fevers using mass spectrometry, next-gen sequencing, microarrays, and multiplex PCR",
+          "Developed and fine-tuned rapid diagnostic tests for detecting a range of viral hemorrhagic fevers",
+          "Extracted RNA and DNA from field samples to facilitate sequencing and identification of emerging pathogens",
+          "Applied 454 sequencing technology to uncover novel viruses within environmental samples"
+        ]
+      }
+    ],
+    "skills": [
+      "R",
+      "MATLAB",
+      "Kubios",
+      "Data Analysis",
+      "Data Visualization",
+      "Statistical Analysis",
+      "Database Management",
+      "Database Architecture",
+      "Epidemiology",
+      "Public Health",
+      "Community Health",
+      "Clinical Research",
+      "Clinical Care",
+      "Laboratory Techniques",
+      "ELISA",
+      "PCR",
+      "TESA",
+      "Mass Spectrometry",
+      "Next-Gen Sequencing",
+      "Microarrays",
+      "NIH Grants Management",
+      "IRB Protocols",
+      "Data Sharing Plans",
+      "Project Management",
+      "Mentoring",
+      "Team Leadership",
+      "Health Equity",
+      "Social Determinants of Health",
+      "Community Health Needs Assessments",
+      "Data Collection",
+      "Quality Assurance",
+      "Digital Data Transition",
+      "Logistics Coordination",
+      "Excel"
+    ],
+    "preferences": {
+      "salary": 0,
+      "salary_answer": "negotiable",
+      "willing_to_relocate": true,
+      "relocation_area": "",
+      "work_arrangement": "any",
+      "willing_onsite": true,
+      "willing_hybrid": true,
+      "willing_remote": true,
+      "willing_travel": true,
+      "commute_ok": true,
+      "shift_flexible": true,
+      "interview_availability": "Available anytime",
+      "how_heard": "Indeed"
+    },
+    "screening_defaults": {
+      "criminal_history": false,
+      "drug_test_ok": true,
+      "background_check_ok": true,
+      "disability": "Prefer not to answer",
+      "gender": "Female",
+      "race_ethnicity": "White",
+      "race_ethnicity_fallbacks": [
+        "White",
+        "Prefer not to answer",
+        "Decline to answer"
+      ],
+      "education_level": "Doctoral Degree",
+      "employee_of_company": false
+    },
+    "resume_text": "Public Health Data Analyst with MD and MPH from Johns Hopkins. 15+ years expertise managing and analyzing complex health data. Currently Assistant Scientist at Johns Hopkins School of Public Health leading cardiac monitoring studies and database architecture. Skills: R, MATLAB, statistical analysis, data visualization, epidemiology, clinical research, NIH grants management, IRB protocols, ELISA, PCR. Former physician with COVID-19 frontline experience. Education: MPH Johns Hopkins, MD SUNY Stony Brook, BA Biology Bard College.",
+    "learned_answers": {},
+    "id": "profile_5093",
+    "life_milestones": [
+      {
+        "id": "m1",
+        "title": "US Navy Operational Leadership",
+        "category": "Leadership & Service",
+        "description": "Led operations crew in high-stakes environments, instilling rigorous attention to detail.",
+        "key_takeaways": "Leadership under fire, reliability, systems thinking.",
+        "selected": true
+      },
+      {
+        "id": "m2",
+        "title": "Georgetown Academic & Policy Focus",
+        "category": "Education Pivot",
+        "description": "Pursuing MS at Georgetown to apply data science to healthcare policy.",
+        "key_takeaways": "Dedication to high-impact work, strategic insight.",
+        "selected": true
+      }
+    ]
+  },
+  {
+    "profile_name": "TEMPLATE - Copy and fill in",
+    "personal": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "state": "",
+      "zip": "",
+      "country": "United States",
+      "linkedin": "",
+      "github": "",
+      "portfolio": ""
+    },
+    "work_authorization": {
+      "us_citizen": true,
+      "authorized_to_work": true,
+      "sponsorship_needed": false,
+      "citizenship_answer": "US Citizen"
+    },
+    "security_clearance": {
+      "has_clearance": false,
+      "level": "None",
+      "active": false,
+      "polygraph": false,
+      "able_to_obtain": true,
+      "notes": ""
+    },
+    "military": {
+      "veteran": false,
+      "branch": "",
+      "years_served": "",
+      "rank": ""
+    },
+    "education": [
+      {
+        "degree": "",
+        "field": "",
+        "school": "",
+        "city_state": "",
+        "year": "",
+        "start_month": "",
+        "start_year": "",
+        "end_month": "",
+        "end_year": "",
+        "current": false
+      }
+    ],
+    "experience": {
+      "total_years": 0,
+      "current_role": "",
+      "current_company": "",
+      "available_start": "Immediately",
+      "skill_years": {
+        "default": 1
+      }
+    },
+    "jobs": [
+      {
+        "title": "",
+        "company": "",
+        "location": "",
+        "dates": "",
+        "bullets": []
+      }
+    ],
+    "skills": [],
+    "preferences": {
+      "salary": 60000,
+      "salary_answer": "negotiable",
+      "willing_to_relocate": false,
+      "relocation_area": "",
+      "work_arrangement": "any",
+      "willing_onsite": true,
+      "willing_hybrid": true,
+      "willing_remote": true,
+      "willing_travel": true,
+      "commute_ok": true,
+      "shift_flexible": true,
+      "interview_availability": "Available anytime",
+      "how_heard": "Indeed"
+    },
+    "screening_defaults": {
+      "criminal_history": false,
+      "drug_test_ok": true,
+      "background_check_ok": true,
+      "disability": "Prefer not to answer",
+      "gender": "Prefer not to answer",
+      "race_ethnicity": "Prefer not to answer",
+      "race_ethnicity_fallbacks": [
+        "Prefer not to answer",
+        "Decline to answer",
+        "Other"
+      ],
+      "education_level": "Bachelor's Degree",
+      "employee_of_company": false
+    },
+    "resume_text": "",
+    "learned_answers": {},
+    "id": "profile_4808",
+    "life_milestones": [
+      {
+        "id": "m1",
+        "title": "US Navy Operational Leadership",
+        "category": "Leadership & Service",
+        "description": "Led operations crew in high-stakes environments, instilling rigorous attention to detail.",
+        "key_takeaways": "Leadership under fire, reliability, systems thinking.",
+        "selected": true
+      },
+      {
+        "id": "m2",
+        "title": "Georgetown Academic & Policy Focus",
+        "category": "Education Pivot",
+        "description": "Pursuing MS at Georgetown to apply data science to healthcare policy.",
+        "key_takeaways": "Dedication to high-impact work, strategic insight.",
+        "selected": true
+      }
+    ]
+  }
+]

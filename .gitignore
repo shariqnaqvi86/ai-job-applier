@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+tailored_docs/*.pdf
+uploads/*
+!uploads/.gitkeep
+handshake_session.json

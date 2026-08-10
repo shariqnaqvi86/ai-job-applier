@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handshake Auto Apply - AI Career & Job Application Suite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- NAVBAR -->
+        <header class="navbar">
+            <a href="#" class="brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="brand-text">HANDSHAKE AUTO APPLY</span>
+                        <span class="brand-badge">PRO v2.5</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">AI Job Autopilot & Milestone Tailorer</div>
+                </div>
+            </a>
+
+            <!-- NAVIGATION TABS -->
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('dashboard')">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </button>
+                <button class="nav-tab" onclick="switchTab('profile-milestones')">
+                    <i class="fa-solid fa-user-gear"></i> Resume & Milestones
+                </button>
+                <button class="nav-tab" onclick="switchTab('job-search')">
+                    <i class="fa-solid fa-magnifying-glass"></i> Job Search
+                </button>
+                <button class="nav-tab" onclick="switchTab('ai-studio')">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Studio
+                </button>
+                <button class="nav-tab" onclick="switchTab('bot-console')">
+                    <i class="fa-solid fa-terminal"></i> Bot Terminal
+                </button>
+                <button class="nav-tab" onclick="switchTab('app-history')">
+                    <i class="fa-solid fa-clock-rotate-left"></i> History
+                </button>
+            </nav>
+
+            <!-- PROFILE SELECTOR -->
+            <div class="user-profile-selector">
+                <div style="text-align: right;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Active Candidate</div>
+                    <div id="active-profile-name" style="font-size: 0.9rem; font-weight: 700; color: var(--primary);">Loading...</div>
+                </div>
+                <select id="profile-select-dropdown" class="profile-select" onchange="onProfileChange()">
+                    <!-- Options populated dynamically -->
+                </select>
+            </div>
+        </header>
+
+        <!-- MAIN CONTAINER -->
+        <main class="main-content">
+
+            <!-- ==========================================
+                 TAB 1: DASHBOARD
+                 ========================================== -->
+            <section id="tab-dashboard" class="tab-pane active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <h1 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800;">Candidate Command Center</h1>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Automate tailored resume & cover letter applications enriched with your life milestones.</p>
+                    </div>
+                    <button class="btn" onclick="switchTab('job-search')">
+                        <i class="fa-solid fa-paper-plane"></i> Launch Job Campaign
+                    </button>
+                </div>
+
+                <!-- METRICS GRID -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fa-solid fa-briefcase"></i></div>
+                        <div>
+                            <div class="metric-val" id="dash-applied-count">0</div>
+                            <div class="metric-lbl">Applications Submitted</div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon" style="color: var(--success); border-color: rgba(0,255,170,0.3); background: rgba(0,255,170,0.1);">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <div>
+                            <div class="metric-val" id="dash-avg-match" style="color: var(--success);">92%</div>
+                            <div class="metric-lbl">Avg ATS Match Score</div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon" style="color: var(--secondary); border-color: rgba(112,0,255,0.3); background: rgba(112,0,255,0.1);">
+                            <i class="fa-solid fa-gem"></i>
+                        </div>
+                        <div>
+                            <div class="metric-val" id="dash-milestones-count">3</div>
+                            <div class="metric-lbl">Active Life Milestones</div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon" style="color: var(--warning); border-color: rgba(255,183,0,0.3); background: rgba(255,183,0,0.1);">
+                            <i class="fa-solid fa-user-ninja"></i>
+                        </div>
+                        <div>
+                            <div class="metric-val" id="dash-bot-status" style="font-size: 1.2rem; color: var(--warning);">READY</div>
+                            <div class="metric-lbl">Handshake Auto Apply Status</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK RUNNER & RECENT JOBS -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h2 class="card-title"><i class="fa-solid fa-bolt" style="color: var(--primary);"></i> Recommended Matched Jobs</h2>
+                                <div class="card-subtitle">Jobs ready for 1-click tailored application</div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="switchTab('job-search')">View All</button>
+                        </div>
+                        <div id="dash-job-list" class="job-feed">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title" style="font-size: 1.1rem;"><i class="fa-solid fa-heart-pulse" style="color: var(--accent);"></i> Selected Life Milestones</h2>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            These significant life milestones will be woven into your AI cover letters to create authentic human resonance.
+                        </p>
+                        <div id="dash-milestones-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem; justify-content: center;" onclick="switchTab('profile-milestones')">
+                            <i class="fa-solid fa-plus"></i> Manage Milestones
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 TAB 2: RESUME & LIFE MILESTONES HUB
+                 ========================================== -->
+            <section id="tab-profile-milestones" class="tab-pane">
+                <div style="margin-bottom: 1.5rem;">
+                    <h1 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800;">Resume & Significant Life Milestones</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Upload your base resume and manage significant life markers that give your cover letters a human voice.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                    <!-- BASE RESUME UPLOAD CARD -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fa-solid fa-file-pdf" style="color: var(--primary);"></i> Base Resume Parser</h2>
+                        </div>
+                        
+                        <div id="dropzone" style="border: 2px dashed var(--border-glass); border-radius: var(--radius-md); padding: 1.5rem 1rem; text-align: center; background: rgba(10,15,26,0.4); cursor: pointer; transition: var(--transition);" onclick="document.getElementById('resume-file-input').click()">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.2rem; color: var(--primary); margin-bottom: 0.75rem;"></i>
+                            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem;">Upload Resume (PDF / DOCX / TXT)</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">AI extracts work experience, skills & contact details</div>
+                            <input type="file" id="resume-file-input" style="display: none;" accept=".pdf,.docx,.doc,.txt" onchange="uploadResumeFile(event)">
+                        </div>
+
+                        <div style="margin-top: 1.25rem;">
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">Candidate Primary Skills</label>
+                            <div id="profile-skills-pills" style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROFILE DETAILS -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fa-solid fa-user-astronaut" style="color: var(--secondary);"></i> Candidate Profile</h2>
+                            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="saveProfileDetails()">Save Profile</button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">First Name</label>
+                                <input type="text" id="prof-fname" class="input-field" value="">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">Last Name</label>
+                                <input type="text" id="prof-lname" class="input-field" value="">
+                            </div>
+                            <div style="grid-column: span 2;">
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">Email</label>
+                                <input type="email" id="prof-email" class="input-field" value="">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">Phone</label>
+                                <input type="text" id="prof-phone" class="input-field" value="">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">Location</label>
+                                <input type="text" id="prof-location" class="input-field" value="">
+                            </div>
+                            <div style="grid-column: span 2;">
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">Desired Salary</label>
+                                <input type="text" id="prof-salary" class="input-field" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HANDSHAKE ACCOUNT CREDENTIALS CARD -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fa-solid fa-handshake" style="color: var(--warning);"></i> Handshake Login</h2>
+                            <span id="hs-status-badge" style="background: rgba(255,183,0,0.1); color: var(--warning); border: 1px solid rgba(255,183,0,0.3); font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm); font-weight: 700;">Not Configured</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">Handshake Email / Screen Name</label>
+                                <input type="text" id="prof-hs-email" class="input-field" placeholder="student@georgetown.edu or username">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">Handshake Password</label>
+                                <div style="position: relative;">
+                                    <input type="password" id="prof-hs-password" class="input-field" placeholder="••••••••••••" style="padding-right: 2.5rem;">
+                                    <button type="button" onclick="toggleHsPasswordVisibility()" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer;">
+                                        <i id="hs-pwd-icon" class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-muted);">Portal / School Login URL</label>
+                                <input type="text" id="prof-hs-portal" class="input-field" value="https://app.joinhandshake.com/login">
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
+                                <button class="btn" style="flex: 1; justify-content: center; font-size: 0.8rem; padding: 0.4rem;" onclick="saveHandshakeCredentials()">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save Login
+                                </button>
+                                <button class="btn btn-secondary" style="flex: 1; justify-content: center; font-size: 0.8rem; padding: 0.4rem;" onclick="verifyHandshakeCredentials()">
+                                    <i class="fa-solid fa-plug-circle-check"></i> Verify
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIGNIFICANT LIFE MILESTONES / MARKERS SECTION -->
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title"><i class="fa-solid fa-gem" style="color: var(--accent);"></i> Significant Life Milestones & Markers</h2>
+                            <div class="card-subtitle">Key life moments, pivots, leadership feats, or personal challenges woven into cover letters</div>
+                        </div>
+                        <button class="btn" onclick="openAddMilestoneModal()">
+                            <i class="fa-solid fa-plus"></i> Add Life Milestone
+                        </button>
+                    </div>
+
+                    <div id="milestones-container" class="milestones-grid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 TAB 3: JOB SEARCH ENGINE
+                 ========================================== -->
+            <section id="tab-job-search" class="tab-pane">
+                <div style="margin-bottom: 1.5rem;">
+                    <h1 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800;">Job Search Engine</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Search live job boards, analyze ATS match scores, and tailor cover letters with 1 click.</p>
+                </div>
+
+                <!-- SEARCH BAR -->
+                <div class="card" style="padding: 1.25rem;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="flex: 2;">
+                            <input type="text" id="search-keywords" class="input-field" placeholder="Job title, keywords, or skills (e.g. Python Developer, Project Manager)">
+                        </div>
+                        <div style="flex: 1;">
+                            <input type="text" id="search-location" class="input-field" placeholder="City, State, or Zip (e.g. Baltimore, MD)">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="search-remote" style="accent-color: var(--primary);"> Remote Only
+                            </label>
+                        </div>
+                        <button class="btn" onclick="executeJobSearch()">
+                            <i class="fa-solid fa-magnifying-glass"></i> Search Jobs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RESULTS FEED -->
+                <div id="search-results-feed" class="job-feed">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 TAB 4: AI TAILORING STUDIO
+                 ========================================== -->
+            <section id="tab-ai-studio" class="tab-pane">
+                <div style="margin-bottom: 1.5rem;">
+                    <h1 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800;">AI Tailoring Studio</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Review and refine your custom-tailored cover letter and ATS resume before applying.</p>
+                </div>
+
+                <div id="studio-empty-state" class="card" style="text-align: center; padding: 3rem;">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                    <h2 style="font-family: var(--font-heading);">No Job Selected for Tailoring</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Go to the Job Search tab and click "Tailor & Preview" on any job.</p>
+                    <button class="btn" onclick="switchTab('job-search')">Go to Job Search</button>
+                </div>
+
+                <div id="studio-content" style="display: none;">
+                    <div class="card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(20,28,48,0.9), rgba(15,22,36,0.9));">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--primary); text-transform: uppercase; font-weight: 700;">Target Role</div>
+                                <h2 id="studio-job-title" style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 800;">Senior Python Engineer</h2>
+                                <div id="studio-company" style="color: var(--text-muted); font-size: 0.9rem;">Aegis Health Tech • Baltimore, MD</div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="match-score-pill">
+                                    <i class="fa-solid fa-circle-check"></i> <span id="studio-match-score">95%</span> Match
+                                </div>
+                                <button class="btn" onclick="launchBotWithStudioJob()">
+                                    <i class="fa-solid fa-play"></i> Auto-Apply Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-glass); display: flex; align-items: center; gap: 1rem;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-gem" style="color: var(--accent);"></i> Milestones Included:</div>
+                            <div id="studio-milestones-tags" style="display: flex; gap: 0.5rem;">
+                                <!-- Tags -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SPLIT SCREEN -->
+                    <div class="studio-split">
+                        <!-- COVER LETTER -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title" style="font-size: 1.1rem;"><i class="fa-solid fa-envelope-open-text" style="color: var(--accent);"></i> Humanized Cover Letter</h3>
+                                <a id="studio-cl-pdf-link" href="#" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fa-solid fa-download"></i> PDF
+                                </a>
+                            </div>
+                            <textarea id="studio-cl-text" class="doc-editor"></textarea>
+                        </div>
+
+                        <!-- TAILORED RESUME -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title" style="font-size: 1.1rem;"><i class="fa-solid fa-file-contract" style="color: var(--primary);"></i> ATS Tailored Resume</h3>
+                                <a id="studio-res-pdf-link" href="#" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fa-solid fa-download"></i> PDF
+                                </a>
+                            </div>
+                            <textarea id="studio-res-text" class="doc-editor"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 TAB 5: HANDSHAKE AUTO APPLY TERMINAL
+                 ========================================== -->
+            <section id="tab-bot-console" class="tab-pane">
+                <div style="margin-bottom: 1.5rem;">
+                    <h1 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800;">Handshake Auto Apply Terminal</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Real-time execution log of stealth browser automation, humanized delays, and AI form solving.</p>
+                </div>
+
+                <!-- CONTROLS CARD -->
+                <div class="card" style="padding: 1.25rem; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 1.5rem;">
+                            <div>
+                                <label style="font-size: 0.8rem; color: var(--text-muted);">Typing Speed (WPM)</label>
+                                <input type="number" id="bot-wpm" class="input-field" value="65" style="width: 100px;">
+                            </div>
+
+                            <div>
+                                <label style="font-size: 0.8rem; color: var(--text-muted);">Mouse Jitter</label>
+                                <select id="bot-jitter" class="select-field" style="width: 120px;">
+                                    <option value="true">Enabled</option>
+                                    <option value="false">Disabled</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label style="font-size: 0.8rem; color: var(--text-muted);">Random Delay (sec)</label>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="number" id="bot-min-delay" class="input-field" value="2" style="width: 70px;">
+                                    <span style="color: var(--text-muted);">-</span>
+                                    <input type="number" id="bot-max-delay" class="input-field" value="5" style="width: 70px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 0.75rem;">
+                            <button id="btn-bot-start" class="btn" onclick="triggerBotStart()">
+                                <i class="fa-solid fa-play"></i> Start Campaign
+                            </button>
+                            <button id="btn-bot-pause" class="btn btn-warning" onclick="triggerBotPause()">
+                                <i class="fa-solid fa-pause"></i> Pause
+                            </button>
+                            <button id="btn-bot-stop" class="btn btn-danger" onclick="triggerBotStop()">
+                                <i class="fa-solid fa-stop"></i> Stop
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TERMINAL CONSOLE -->
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="terminal-dots">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);">handshake_auto_apply.py --live-execution</span>
+                        </div>
+                        <div id="bot-live-status-pill" style="font-size: 0.75rem; font-weight: 700; color: var(--success); background: rgba(0,255,170,0.1); padding: 0.2rem 0.6rem; border-radius: var(--radius-full); border: 1px solid rgba(0,255,170,0.3);">
+                            IDLE
+                        </div>
+                    </div>
+                    <div id="terminal-log-output" class="terminal-logs">
+                        <div class="log-line" data-level="SYSTEM">[SYSTEM] Handshake Auto Apply Application Suite initialized.</div>
+                        <div class="log-line" data-level="SYSTEM">[SYSTEM] Stealth Selenium Engine and Gemini AI Solver initialized.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 TAB 6: APPLICATION HISTORY
+                 ========================================== -->
+            <section id="tab-app-history" class="tab-pane">
+                <div style="margin-bottom: 1.5rem;">
+                    <h1 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800;">Application History</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Complete log of jobs applied with tailored cover letters and resumes.</p>
+                </div>
+
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company</th>
+                                <th>Location</th>
+                                <th>Applied Date</th>
+                                <th>ATS Match</th>
+                                <th>Tailored Documents</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="app-history-tbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ADD MILESTONE MODAL -->
+    <div id="modal-add-milestone" class="modal-backdrop">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;"><i class="fa-solid fa-gem" style="color: var(--accent);"></i> Add Significant Life Milestone</h2>
+                <button style="background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;" onclick="closeAddMilestoneModal()">&times;</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Milestone Title</label>
+                    <input type="text" id="m-title" class="input-field" placeholder="e.g. US Navy Operations & Crisis Leadership">
+                </div>
+
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Category</label>
+                    <select id="m-category" class="select-field">
+                        <option value="Leadership & Service">Leadership & Service</option>
+                        <option value="Career Transition">Career Transition</option>
+                        <option value="Technical Achievement">Technical Achievement</option>
+                        <option value="Overcoming Adversity">Overcoming Adversity</option>
+                        <option value="Personal Growth">Personal Growth</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Detailed Story / Context</label>
+                    <textarea id="m-description" class="textarea-field" rows="3" placeholder="Describe what happened, your responsibilities, or key pivot point in your life..."></textarea>
+                </div>
+
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Key Takeaways for Cover Letter</label>
+                    <input type="text" id="m-takeaways" class="input-field" placeholder="e.g. Unshakable resilience under fire, systems-level problem solving">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" onclick="closeAddMilestoneModal()">Cancel</button>
+                <button class="btn" onclick="saveNewMilestone()"><i class="fa-solid fa-save"></i> Save Milestone</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

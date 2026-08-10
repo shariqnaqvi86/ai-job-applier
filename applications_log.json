@@ -1,0 +1,44 @@
+[
+  {
+    "id": "app_95585",
+    "job_title": "Senior Python Developer",
+    "company": "Aegis Health Tech",
+    "location": "Baltimore, MD (Hybrid)",
+    "applied_at": "2026-07-30 12:04:15",
+    "status": "Applied",
+    "match_score": 65,
+    "keywords": [
+      "Python",
+      "SQL",
+      "REST APIs",
+      "AWS",
+      "Docker",
+      "Healthcare IT",
+      "Problem Solving"
+    ],
+    "resume_file": "Resume_job_101.pdf",
+    "cover_letter_file": "CoverLetter_job_101.pdf",
+    "cover_letter_preview": "Dear Hiring Team at Aegis Health Tech,\n\nI am writing to express my strong enthusiasm for the Senior Python Developer role. With my background in technology and project execution, I am confident in my ability to drive results for your team.\n\nThroughout my career, I have focused on solving complex tec..."
+  },
+  {
+    "id": "app_93835",
+    "job_title": "Senior Python Developer",
+    "company": "Aegis Health Tech",
+    "location": "Baltimore, MD (Hybrid)",
+    "applied_at": "2026-07-30 12:00:41",
+    "status": "Applied",
+    "match_score": 65,
+    "keywords": [
+      "Python",
+      "SQL",
+      "REST APIs",
+      "AWS",
+      "Docker",
+      "Healthcare IT",
+      "Problem Solving"
+    ],
+    "resume_file": "Resume_job_101.pdf",
+    "cover_letter_file": "CoverLetter_job_101.pdf",
+    "cover_letter_preview": "Dear Hiring Team at Aegis Health Tech,\n\nI am writing to express my strong enthusiasm for the Senior Python Developer role. With my background in technology and project execution, I am confident in my ability to drive results for your team.\n\nThroughout my career, I have focused on solving complex tec..."
+  }
+]
