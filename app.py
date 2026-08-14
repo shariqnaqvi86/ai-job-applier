@@ -16,8 +16,8 @@ from bot_engine import (
 
 # 1. Page configuration - wide layout
 st.set_page_config(
-    page_title="Auto Job Applier AI",
-    page_icon="🤖",
+    page_title="Handshake AI Job Applier",
+    page_icon="🤝",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -152,8 +152,8 @@ st.sidebar.info(
 )
 
 # Main Title Section
-st.markdown('<div class="main-header">🤖 AI Job Application Bot</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Configure your profile, upload your resume/cover letter documents, test your API key, and launch the automated applier.</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">🤝 Handshake AI Job Application Bot</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">Automated Handshake Quick Apply with real-time Gemini AI cover letter & resume tailoring.</div>', unsafe_allow_html=True)
 
 # 3. Main panel: side-by-side columns for Resume and Summary
 col1, col2 = st.columns(2)

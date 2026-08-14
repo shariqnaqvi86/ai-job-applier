@@ -743,13 +743,16 @@ def get_indeed_job_description():
     # Target the right pane's job description area
     # From DOM inspection: jobsearch-embeddedBody, jobDescriptionText, etc.
     selectors = [
+        "div[data-hook='job-description']",
+        "div[class*='style__description']",
+        "div[class*='description']",
+        "div[class*='Description']",
         "div#jobDescriptionText",
         "div.jobsearch-jobDescriptionText",
         "div.jobsearch-embeddedBody",
         "div[class*='jobDescription']",
         "div.jobsearch-JobComponent-description",
         "div[id*='jobDescription']",
-        # Right pane container
         "div.jobsearch-RightPane div[class*='description']",
         "div.jobsearch-ViewJobLayout div[class*='description']",
         "div#jobsearch-ViewJobPaneWrapper",
@@ -887,22 +890,22 @@ def get_indeed_metadata():
 # ==============================
 
 def _get_indeed_apply_selectors():
-    """Indeed Apply button selectors — confirmed from DOM inspection and working bots."""
+    """Apply button selectors — Handshake and Indeed."""
     return [
-        # From working bot — this is the actual class Indeed uses
+        ("CSS", "button[aria-label*='Apply']"),
+        ("CSS", "button[aria-label*='apply']"),
+        ("CSS", "button[data-hook*='apply']"),
+        ("CSS", "button[class*='apply']"),
         ("CSS", ".ia-IndeedApplyButton"),
         ("CSS", "button.ia-IndeedApplyButton"),
-        # Confirmed: Indeed's apply button wrapper class
         ("CSS", "div.jobsearch-IndeedApplyButton-contentWrapper"),
         ("CSS", "button#indeedApplyButton"),
         ("CSS", "button.indeed-apply-button"),
-        ("CSS", "button[data-style='indeed-apply-button']"),
-        # Text/class matches
+        ("XPATH", "//button[contains(text(),'Apply')]"),
+        ("XPATH", "//button[contains(text(),'Quick Apply')]"),
         ("XPATH", "//button[contains(text(),'Apply now')]"),
-        ("XPATH", "//button[contains(@class,'IndeedApply')]"),
-        ("XPATH", "//span[contains(@class,'IndeedApplyButton')]//button"),
-        ("CSS", "button[class*='IndeedApplyButton']"),
-        ("CSS", "button[aria-label='Apply now']"),
+        ("XPATH", "//a[contains(text(),'Apply')]"),
+        ("XPATH", "//a[contains(text(),'Quick Apply')]"),
     ]
 
 
