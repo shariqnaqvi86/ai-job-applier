@@ -3517,12 +3517,15 @@ def collect_job_cards():
     if 'joinhandshake.com' in current_url:
         try:
             selectors = [
-                "a[href*='/jobs/']",
                 "a[href*='/stu/jobs/']",
+                "a[href*='/jobs/']",
                 "a[href*='/jobs']",
+                "a[href*='job']",
                 "div[data-hook='job-card']",
+                "div[data-hook*='job']",
                 "div[class*='JobCard']",
                 "div[class*='style__job-card']",
+                "div[class*='style__card']",
                 "div[class*='card']"
             ]
             seen_urls = set()
@@ -3533,27 +3536,34 @@ def collect_job_cards():
                         href = el.get_attribute("href") or ""
                         if not href:
                             try:
-                                link_child = el.find_element(By.CSS_SELECTOR, "a[href*='/jobs']")
+                                link_child = el.find_element(By.CSS_SELECTOR, "a[href*='job']")
                                 href = link_child.get_attribute("href") or ""
                             except Exception:
                                 pass
-                        if not href or href in seen_urls:
+                        
+                        # Generate fallback identifier if no direct href
+                        card_id = href or el.get_attribute("id") or str(hash(el.text[:50]))
+                        if not card_id or card_id in seen_urls:
                             continue
-                        if "/employers/" in href or "/events/" in href or "/messages/" in href or "/career-center/" in href:
+                        
+                        if href and any(ignore in href for ignore in ["/employers/", "/events/", "/messages/", "/career-center/", "/login"]):
                             continue
-                        if not any(path in href for path in ["/jobs", "/stu/jobs", "job"]):
-                            continue
-                        seen_urls.add(href)
+                        
+                        seen_urls.add(card_id)
                         raw_text = el.text.strip()
+                        if not raw_text or len(raw_text) < 3:
+                            continue
+                        
                         lines = [l.strip() for l in raw_text.split("\n") if l.strip()]
                         job_title = lines[0] if lines else "Job Position"
                         company_name = lines[1] if len(lines) > 1 else ""
+                        
                         job_cards.append({
                             'url': href,
                             'title': job_title,
                             'company': company_name,
                             'element': el,
-                            'jk': href.split("/")[-1],
+                            'jk': href.split("/")[-1] if href else "hs_card",
                             'from_handshake': True
                         })
                     except Exception:
