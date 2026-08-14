@@ -43,12 +43,12 @@ st.markdown("""
         border-radius: 8px;
         padding: 0.5rem 1rem;
     }
-    .upload-box {
-        border: 1px dashed #CBD5E1;
-        border-radius: 8px;
-        padding: 0.5rem;
-        margin-bottom: 1rem;
+    .status-card {
+        border-left: 4px solid #2563EB;
         background-color: #F8FAFC;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -68,6 +68,30 @@ def resolve_gemini_api_key(ui_key):
     except Exception:
         pass
     return ""
+
+# Pre-Flight Validation Check for Handshake Job Search URL
+def validate_handshake_url(url: str) -> tuple:
+    """Check if driver is currently on a valid Handshake job search page."""
+    if not url:
+        return False, "Driver URL is empty or inaccessible."
+
+    url_lower = url.lower()
+
+    if "joinhandshake.com" not in url_lower:
+        return False, f"The open browser is currently at '{url}'. Please navigate to your school's Handshake domain (*.joinhandshake.com)."
+
+    if "/login" in url_lower and "job" not in url_lower:
+        return False, "The browser is still on the Handshake Login page. Please log in first and navigate to your Job Search page."
+
+    valid_paths = ["/job-search", "/stu/jobs", "/jobs", "/explore/jobs"]
+    if any(path in url_lower for path in valid_paths):
+        return True, f"Valid Handshake Job Search page detected: {url}"
+
+    return False, (
+        f"Current browser URL is '{url}'. "
+        "Please navigate your open browser to your Handshake Job Search page "
+        "(e.g. https://[your-school].joinhandshake.com/stu/jobs or /job-search) before clicking 'Start Applying'."
+    )
 
 # Session state initialization
 if "user_data" not in st.session_state:
@@ -153,7 +177,7 @@ st.sidebar.info(
 
 # Main Title Section
 st.markdown('<div class="main-header">🤝 Handshake AI Job Application Bot</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Automated Handshake Quick Apply with real-time Gemini AI cover letter & resume tailoring.</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">Human-in-the-Loop Architecture: Launch browser -> Log in & search manually -> Trigger AI application run.</div>', unsafe_allow_html=True)
 
 # 3. Main panel: side-by-side columns for Resume and Summary
 col1, col2 = st.columns(2)
@@ -176,9 +200,9 @@ with col1:
 
     full_resume = st.text_area(
         "Full Resume Content",
-        height=300,
+        height=280,
         value=st.session_state["user_data"].get("full_resume", ""),
-        placeholder="Paste or upload your complete detailed resume here (Work history, Education, Skills, Clearances)..."
+        placeholder="Paste or upload your complete detailed resume here..."
     )
 
 with col2:
@@ -215,7 +239,7 @@ with col2:
 
     resume_summary = st.text_area(
         "Resume Summary Content",
-        height=300,
+        height=280,
         value=st.session_state["user_data"].get("resume_summary", ""),
         placeholder="Paste, upload, or auto-generate a concise summary of your resume..."
     )
@@ -250,11 +274,16 @@ def is_driver_alive(driver):
     except Exception:
         return False
 
-# 5. Primary button: Launch Browser & Log In
+# ==============================================================================
+# HUMAN-IN-THE-LOOP ARCHITECTURE
+# ==============================================================================
+st.markdown("## 🛑 Human-in-the-Loop Execution Control")
+
 btn_col1, btn_col2 = st.columns([1, 2])
 
+# STEP 1: PERSIST THE BROWSER
 with btn_col1:
-    launch_clicked = st.button("Launch Browser & Log In", type="primary", use_container_width=True)
+    launch_clicked = st.button("Step 1: Launch Browser & Log In", type="primary", use_container_width=True)
 
 if launch_clicked:
     st.info("Launching Chrome browser...")
@@ -281,36 +310,77 @@ if launch_clicked:
         # Navigate to Handshake login page
         driver.get("https://app.joinhandshake.com/login")
 
-        # Save driver & session state
+        # PERSIST BROWSER: Store in st.session_state["driver"]
         st.session_state["driver"] = driver
+        
+        # YIELD CONTROL: Script stops here and waits for user manual interaction
         st.success("Browser launched successfully! Handshake login page opened.")
         st.rerun()
 
     except Exception as e:
         st.error(f"Failed to launch browser: {e}")
 
-# Check browser status in session_state
+# STEP 2: THE PAUSE MECHANISM
 driver_active = ("driver" in st.session_state 
                  and st.session_state["driver"] is not None 
                  and is_driver_alive(st.session_state["driver"]))
 
 if driver_active:
-    st.markdown("### 🌐 Browser Session Active")
-    st.info("Chrome browser is open at Handshake login page. Log in, search for jobs, then click 'Start Applying'.")
+    current_browser = st.session_state["driver"]
+    try:
+        active_url = current_browser.current_url
+    except Exception:
+        active_url = "Unknown"
 
-    # 6. Second button: Start Applying
-    start_applying = st.button("🚀 Start Applying", use_container_width=True)
+    st.markdown(
+        f"""
+        <div class="status-card">
+            <h4>⏸️ Step 2: The Pause Mechanism (Dormant Mode)</h4>
+            <p><strong>Active Browser URL:</strong> <code>{active_url}</code></p>
+            <p>The bot is currently dormant. Please perform the following steps in your open Chrome browser window:</p>
+            <ol>
+                <li>Log in to your school's Handshake portal.</li>
+                <li>Search for your desired jobs using location/keyword filters.</li>
+                <li>Ensure your browser is sitting on the <strong>Job Search Results page</strong>.</li>
+                <li>Then click <strong>"Step 3: 🚀 Start Applying"</strong> below.</li>
+            </ol>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # STEP 3: THE TRIGGER & PRE-FLIGHT CHECK (VALIDATION)
+    start_applying = st.button("Step 3: 🚀 Start Applying", use_container_width=True)
 
     if start_applying:
+        active_driver = st.session_state["driver"]
+        
+        # 1. Fetch current URL for Pre-Flight Check
+        try:
+            current_url = active_driver.current_url
+        except Exception as err_url:
+            st.error(f"🛑 Pre-Flight Check Failed: Could not read browser URL ({err_url}). Ensure the Chrome browser is open.")
+            st.stop()
+
+        # 2. Execute Pre-Flight Validation Check
+        is_valid_page, validation_message = validate_handshake_url(current_url)
+
+        if not is_valid_page:
+            st.error(f"🛑 **Pre-Flight Check Failed**: {validation_message}")
+            st.warning("⚠️ Execution halted. Please navigate your open browser to your Handshake Job Search page before clicking 'Start Applying'.")
+            st.stop()
+
+        # 3. Validation Passed -> Proceed with Scraping & Applying
+        st.success(f"✅ **Pre-Flight Check Passed**: {validation_message}")
+
         # Build contact string from location, email, and phone
         user_contact_parts = [p for p in [location, email, phone] if p.strip()]
         user_contact = " | ".join(user_contact_parts)
 
-        st.warning("⚠️ Application bot engine is now running. Do not close the open Chrome browser.")
+        st.info("🤖 Bot processing current page DOM job cards using Gemini AI...")
 
-        with st.spinner(f"🤖 Bot processing current page using {selected_model}..."):
+        with st.spinner(f"Processing jobs with {selected_model}..."):
             try:
-                active_driver = st.session_state["driver"]
                 submitted_count = run_bot_logic(
                     driver_arg=active_driver,
                     api_key_arg=effective_api_key,
@@ -324,3 +394,5 @@ if driver_active:
                 st.success(f"🎉 Application run complete! Total applications submitted in this run: {submitted_count}")
             except Exception as err:
                 st.error(f"An error occurred during bot execution: {err}")
+else:
+    st.warning("👈 Please click **'Step 1: Launch Browser & Log In'** to initialize the open Chrome browser.")
