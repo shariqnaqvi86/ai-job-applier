@@ -910,9 +910,34 @@ def _get_indeed_apply_selectors():
 
 
 def has_easy_apply():
-    """Check if this job has Indeed Easy Apply (not external apply)."""
+    """Check if this job has Handshake or Indeed Easy Apply (not external apply)."""
+    current_url = driver.current_url.lower()
+
+    # Handshake Apply check
+    if 'joinhandshake.com' in current_url:
+        for sel in ["button[aria-label*='Apply']", "button[data-hook*='apply']", "button[class*='apply']", "a[href*='apply']"]:
+            try:
+                for btn in driver.find_elements(By.CSS_SELECTOR, sel):
+                    if btn.is_displayed():
+                        text = (btn.text or "").lower().strip()
+                        if "external" in text or "company site" in text:
+                            continue
+                        return True
+            except Exception:
+                continue
+        for xpath in ["//button[contains(text(),'Apply')]", "//button[contains(text(),'Quick Apply')]", "//a[contains(text(),'Apply')]"]:
+            try:
+                for btn in driver.find_elements(By.XPATH, xpath):
+                    if btn.is_displayed():
+                        text = (btn.text or "").lower().strip()
+                        if "external" in text or "company site" in text:
+                            continue
+                        return True
+            except Exception:
+                continue
+
     # On full-page /viewjob, button may be below fold
-    if '/viewjob' in driver.current_url:
+    if '/viewjob' in current_url:
         try:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight * 0.5);")
             time.sleep(0.5)
@@ -924,7 +949,6 @@ def has_easy_apply():
             by = By.CSS_SELECTOR if sel_type == "CSS" else By.XPATH
             elements = driver.find_elements(by, sel)
             for btn in elements:
-                # Scroll to element before checking visibility
                 try:
                     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
                     time.sleep(0.3)
@@ -933,47 +957,12 @@ def has_easy_apply():
                 btn_id = btn.get_attribute("id") or ""
                 if btn.is_displayed() or btn_id == "indeedApplyButton":
                     btn_text = (btn.text or "").lower().strip()
-                    if "company site" in btn_text:
+                    if "company site" in btn_text or "external" in btn_text:
                         print(f"  External apply: '{btn_text}' — skipping")
                         return False
                     return True
         except Exception:
             continue
-
-    # Check anchor tags too (full-page view uses <a> not <button>)
-    for xpath in ["//a[contains(text(),'Apply now')]", "//a[contains(@class,'IndeedApply')]"]:
-        try:
-            el = driver.find_element(By.XPATH, xpath)
-            try:
-                driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", el)
-                time.sleep(0.3)
-            except Exception:
-                pass
-            if el.is_displayed():
-                btn_text = (el.text or "").lower()
-                if "company site" not in btn_text:
-                    return True
-        except Exception:
-            pass
-
-    # Also check for "Easily apply" text anywhere
-    try:
-        el = driver.find_element(By.XPATH, "//span[contains(text(),'Easily apply')]")
-        if el.is_displayed():
-            return True
-    except Exception:
-        pass
-
-    # Scroll to bottom and check one more time
-    try:
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(1)
-        for xpath in ["//button[contains(text(),'Apply now')]", "//a[contains(text(),'Apply now')]"]:
-            el = driver.find_element(By.XPATH, xpath)
-            if el.is_displayed():
-                return True
-    except Exception:
-        pass
 
     return False
 
@@ -988,6 +977,33 @@ def click_apply_button():
     """
     old_handles = set(driver.window_handles)
     num_old_handles = len(old_handles)
+
+    # Handshake Apply Click Handler
+    if 'joinhandshake.com' in driver.current_url.lower():
+        hs_apply_selectors = [
+            "button[aria-label*='Apply']",
+            "button[aria-label*='apply']",
+            "button[data-hook*='apply']",
+            "button[class*='apply']",
+            "a[href*='apply']",
+            "//button[contains(text(),'Apply')]",
+            "//button[contains(text(),'Quick Apply')]",
+            "//a[contains(text(),'Apply')]"
+        ]
+        for sel in hs_apply_selectors:
+            try:
+                by = By.XPATH if sel.startswith("//") else By.CSS_SELECTOR
+                btns = driver.find_elements(by, sel)
+                for btn in btns:
+                    if btn.is_displayed():
+                        driver.execute_script("arguments[0].scrollIntoView({block:'center'});", btn)
+                        time.sleep(0.3)
+                        stealth_click(btn)
+                        print("  Clicked Handshake Apply button.")
+                        time.sleep(2)
+                        return "same_page"
+            except Exception:
+                continue
 
     # EARLY CHECK: Are we already on SmartApply? (Indeed sometimes auto-opens it)
     current = driver.current_url.lower()
@@ -3631,13 +3647,30 @@ def process_page():
 
             # Click the job card to load details
             try:
-                jk = job.get('jk', '')
-                if job.get('from_json') and job.get('url'):
+                if job.get('from_handshake'):
+                    card_element = job.get('element')
+                    clicked = False
+                    if card_element:
+                        try:
+                            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", card_element)
+                            human_delay(0.5, 1)
+                            stealth_click(card_element)
+                            print(f"  Clicked Handshake job card element.")
+                            human_delay(2, 3)
+                            clicked = True
+                        except Exception:
+                            pass
+                    if not clicked and job.get('url'):
+                        driver.get(job['url'])
+                        print(f"  Navigated to Handshake job URL: {job['url'][:60]}")
+                        human_delay(3, 5)
+                elif job.get('from_json') and job.get('url'):
                     # JSON-sourced: navigate directly to job URL
                     driver.get(job['url'])
                     print(f"  Navigated to job page.")
                     human_delay(3, 5)
-                elif jk:
+                elif job.get('jk'):
+                    jk = job.get('jk')
                     # Re-find by data-jk to avoid stale element references
                     card_elements = driver.find_elements(By.CSS_SELECTOR, f"[data-jk='{jk}']")
                     if card_elements:
@@ -3648,7 +3681,6 @@ def process_page():
                         print(f"  Clicked job card (fresh lookup by jk={jk}).")
                         human_delay(2, 4)
                     elif job.get('url'):
-                        # Fallback: navigate by URL
                         driver.get(job['url'])
                         print(f"  Card stale, navigated by URL instead.")
                         human_delay(3, 5)
@@ -3656,7 +3688,6 @@ def process_page():
                         print(f"  Could not find card jk={jk} — SKIPPING")
                         continue
                 elif job.get('element'):
-                    # Last resort: use stored element (may be stale)
                     card_element = job.get('element')
                     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", card_element)
                     human_delay(0.5, 1)
@@ -3664,22 +3695,22 @@ def process_page():
                     print(f"  Clicked job card (stored element).")
                     human_delay(2, 4)
                 else:
-                    print(f"  No jk, URL, or element — SKIPPING")
+                    print(f"  No valid link or element — SKIPPING")
                     continue
             except Exception as e:
                 print(f"  Could not click job card: {e}")
                 log_application(f"SKIPPED (click failed): {title}")
                 continue
 
-            # Wait for right pane to update
+            # Wait for right pane / detail section to update
             try:
-                WebDriverWait(driver, 8).until(
+                WebDriverWait(driver, 6).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR,
-                        "div.jobsearch-RightPane, div.jobsearch-ViewJobLayout, div#jobDescriptionText"
+                        "div[data-hook='job-description'], div[class*='description'], div[class*='Description'], main, button[aria-label*='Apply'], div.jobsearch-RightPane, div.jobsearch-ViewJobLayout, div#jobDescriptionText"
                     ))
                 )
             except Exception:
-                print("  Right pane didn't load.")
+                print("  Right pane load wait finished.")
 
             # Check if already applied
             if check_already_applied():
